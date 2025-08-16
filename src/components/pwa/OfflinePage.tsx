@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wifi, WifiOff, RefreshCw, Home } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { WifiOff, RefreshCw, Home } from 'lucide-react';
 
 export function OfflinePage() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -38,16 +38,18 @@ export function OfflinePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-white/10 backdrop-blur-sm border-white/20">
-        <CardHeader className="text-center">
+        <div className="text-center px-6 pt-6">
           <div className="mx-auto w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
             <WifiOff className="w-8 h-8 text-red-400" />
           </div>
-          <CardTitle className="text-white text-xl">You're Offline</CardTitle>
-        </CardHeader>
+          <h2 className="text-white text-xl font-semibold mb-4">
+            You&apos;re Offline
+          </h2>
+        </div>
         <CardContent className="space-y-4">
           <p className="text-gray-300 text-center text-sm">
-            It looks like you've lost your internet connection. Don't worry,
-            some features of KooPaa are still available offline.
+            It looks like you&apos;ve lost your internet connection. Don&apos;t
+            worry, some features of KooPaa are still available offline.
           </p>
 
           <div className="space-y-3">

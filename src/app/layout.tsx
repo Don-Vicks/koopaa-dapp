@@ -4,6 +4,7 @@ import React from 'react';
 import { AppProviders } from '@/providers';
 import { Analytics } from '@vercel/analytics/next';
 import { Toaster } from 'sonner';
+import { PWAProvider } from '@/components/pwa';
 
 export const metadata: Metadata = {
   title: 'KooPaa',
@@ -19,9 +20,11 @@ export default function RootLayout({
       <meta name="theme-color" content="#000000" />
 
       <body className={`antialiased`}>
-        <AppProviders>{children}</AppProviders>
-        <Toaster position="bottom-center" closeButton />
-        <Analytics />
+        <PWAProvider>
+          <AppProviders>{children}</AppProviders>
+          <Toaster position="bottom-center" closeButton />
+          <Analytics />
+        </PWAProvider>
       </body>
     </html>
   );

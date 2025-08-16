@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useToast } from '@/hooks/use-transaction-toast';
+import { toast } from 'sonner';
 
 interface PWAInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -12,11 +12,12 @@ interface PWAInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+interface ExtendedWindow extends Window {
+  deferredPrompt?: PWAInstallPromptEvent;
+}
+
 export function PWARegister() {
   const [isOnline, setIsOnline] = useState(true);
-  const [swRegistration, setSwRegistration] =
-    useState<ServiceWorkerRegistration | null>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Register service worker
@@ -24,7 +25,6 @@ export function PWARegister() {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
-          setSwRegistration(registration);
           console.log('SW registered: ', registration);
 
           // Check for updates
@@ -36,19 +36,15 @@ export function PWARegister() {
                   newWorker.state === 'installed' &&
                   navigator.serviceWorker.controller
                 ) {
-                  toast({
-                    title: 'App Update Available',
-                    description:
-                      'A new version of KooPaa is available. Refresh to update.',
-                    action: (
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="bg-primary text-primary-foreground px-3 py-1 rounded text-sm"
-                      >
-                        Update Now
-                      </button>
-                    ),
-                  });
+                  toast.info(
+                    'A new version of KooPaa is available. Refresh to update.',
+                    {
+                      action: {
+                        label: 'Update Now',
+                        onClick: () => window.location.reload(),
+                      },
+                    }
+                  );
                 }
               });
             }
@@ -73,7 +69,7 @@ export function PWARegister() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, [toast]);
+  }, []);
 
   useEffect(() => {
     // Handle beforeinstallprompt event
@@ -82,33 +78,26 @@ export function PWARegister() {
       const promptEvent = e as PWAInstallPromptEvent;
 
       // Store the event for later use
-      (window as any).deferredPrompt = promptEvent;
+      (window as ExtendedWindow).deferredPrompt = promptEvent;
 
-      toast({
-        title: 'Install KooPaa',
-        description: 'Add KooPaa to your home screen for quick access',
-        action: (
-          <button
-            onClick={() => {
-              if ((window as any).deferredPrompt) {
-                (window as any).deferredPrompt.prompt();
-                (window as any).deferredPrompt.userChoice.then(
-                  (choiceResult: any) => {
-                    if (choiceResult.outcome === 'accepted') {
-                      console.log('User accepted the install prompt');
-                    } else {
-                      console.log('User dismissed the install prompt');
-                    }
-                    (window as any).deferredPrompt = null;
-                  }
-                );
-              }
-            }}
-            className="bg-primary text-primary-foreground px-3 py-1 rounded text-sm"
-          >
-            Install
-          </button>
-        ),
+      toast.info('Add KooPaa to your home screen for quick access', {
+        action: {
+          label: 'Install',
+          onClick: () => {
+            const extendedWindow = window as ExtendedWindow;
+            if (extendedWindow.deferredPrompt) {
+              extendedWindow.deferredPrompt.prompt();
+              extendedWindow.deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                  console.log('User accepted the install prompt');
+                } else {
+                  console.log('User dismissed the install prompt');
+                }
+                extendedWindow.deferredPrompt = undefined;
+              });
+            }
+          },
+        },
       });
     };
 
@@ -120,7 +109,7 @@ export function PWARegister() {
         handleBeforeInstallPrompt
       );
     };
-  }, [toast]);
+  }, []);
 
   // Show offline indicator
   if (!isOnline) {
