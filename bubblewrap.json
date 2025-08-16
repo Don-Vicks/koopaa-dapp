@@ -1,0 +1,44 @@
+{
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "enableNotifications": true,
+  "fallbackType": "customtabs",
+  "icon": {
+    "foreground": "public/logo.png",
+    "monochrome": "public/logo.png"
+  },
+  "launcherName": "KooPaa",
+  "maskableIcon": {
+    "foreground": "public/logo.png"
+  },
+  "monochromeIcon": {
+    "foreground": "public/logo.png"
+  },
+  "name": "KooPaa",
+  "orientation": "portrait",
+  "packageId": "com.koopaa.app",
+  "shortcuts": [
+    {
+      "chosenIconUrl": "public/logo.png",
+      "name": "Create Ajo Group",
+      "shortName": "New Group",
+      "url": "/savings/create-ajo"
+    },
+    {
+      "chosenIconUrl": "public/logo.png",
+      "name": "My Savings",
+      "shortName": "Savings",
+      "url": "/savings"
+    }
+  ],
+  "signingKey": {
+    "alias": "koopaa-key",
+    "keypass": "koopaa123",
+    "keystorePass": "koopaa123"
+  },
+  "sourceDirectory": ".",
+  "startUrl": "/",
+  "targetArchitectures": ["arm64-v8a", "armeabi-v7a", "x86_64"],
+  "themeColor": "#6366f1",
+  "webManifestUrl": "https://your-domain.com/manifest.json"
+}

@@ -9,13 +9,17 @@
   },
   "scripts": {
     "build": "next build",
+    "build:pwa": "next build && npm run generate-sw",
     "ci": "npm run build && npm run lint && npm run format:check",
     "postinstall": "npx prisma generate",
     "dev": "next dev --turbopack",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "generate-sw": "node scripts/generate-sw.js",
+    "pwa:analyze": "lighthouse https://localhost:3000 --view",
+    "pwa:test": "npm run build && npm run start"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.1",
